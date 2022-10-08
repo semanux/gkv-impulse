@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
 import QrcodeVue from "qrcode.vue";
+import { computed } from "vue";
+import Face from "./Face.vue"
 
 const url = computed(() => window.location.href);
 
@@ -8,7 +9,8 @@ const url = computed(() => window.location.href);
 
 <template>
   <h1>Semanux @ GKV im:pulse</h1>
-  <span>Hello World</span>
+  <face />
+  <br/>
   <qrcode-vue
     :value="url"
     :render-as="'svg'"
