@@ -20,7 +20,7 @@ const url = computed(() => window.location.href);
         :value="url"
         :render-as="'svg'"
         :level="'L'"
-        :class="$style.qrcode"
+        :class="[$style.cell, $style.qrcode]"
       />
     </div>
   </div>
@@ -37,7 +37,7 @@ const url = computed(() => window.location.href);
 }
 
 .cell {
-  margin: 4rem;
+  margin: 10rem;
 }
 
 .cell img {
