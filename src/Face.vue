@@ -34,6 +34,7 @@ onMounted(() => {
 
     // Setup smiley.
     const sphereTexture = new THREE.TextureLoader().load("smiley.png");
+    sphereTexture.anisotropy = 2;
     const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 24);
     sphereGeometry.rotateY(-0.5 * pi);
     const sphereMaterial = new THREE.MeshPhongMaterial({ map: sphereTexture });
@@ -124,12 +125,17 @@ onMounted(() => {
 
 <template>
   <canvas
-
+    :class="$style.face"
     ref="canvas"
     :width="CANVAS_WIDTH"
     :height="CANVAS_HEIGHT"
   />
 </template>
 
-<style>
+<style module>
+
+.face {
+  border-radius: var(--high-roundness);
+}
+
 </style>

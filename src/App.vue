@@ -1,24 +1,39 @@
 <script setup lang="ts">
-import QrcodeVue from "qrcode.vue";
-import { computed } from "vue";
-import Face from "./Face.vue"
 
-const url = computed(() => window.location.href);
+import { onMounted } from "vue";
+import Face from "./Face.vue";
+import Foot from "./Foot.vue";
+
+onMounted(() => {
+  document.documentElement.setAttribute("data-theme", "dark");
+});
 
 </script>
 
 <template>
-  <h1>Semanux @ GKV im:pulse</h1>
-  <face />
-  <br/>
-  <qrcode-vue
-    :value="url"
-    :render-as="'svg'"
-    :level="'L'"
-  />
+  <div  :class="$style.app">
+    <div>
+      <h1>Semanux @ GKV im:pulse</h1>
+      <face />
+    </div>
+    <foot/>
+  </div>
 </template>
 
 <style>
 @import "./assets/styles/corporate/style.css";
+
+body {
+  background: var(--color-fill-primary);
+}
+
+</style>
+
+<style module>
+
+.app {
+  display: grid;
+  justify-items: center;
+}
 
 </style>
