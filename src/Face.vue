@@ -12,35 +12,6 @@ onMounted(() => {
 
   if(canvas.value) {
 
-    let accDeltaX = 0;
-    let accDeltaY = 0;
-
-    canvas.value.onmousedown = (e: MouseEvent) => {
-      e.preventDefault();
-      let mouseX = e.clientX;
-      let mouseY = e.clientY;
-
-      // Register mouse up and mouse move globally on document.
-      document.onmouseup = () => {
-        // Stop moving when mouse button is released.
-        document.onmouseup = null;
-        document.onmousemove = null;
-      };
-
-      // Update position of keyboard at mouse move.
-      document.onmousemove = (e: MouseEvent) => {
-        e.preventDefault();
-
-        // Compute movement of mouse.
-        accDeltaX += mouseX - e.clientX;
-        accDeltaY += mouseY - e.clientY;
-
-        // Update mouse position.
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-      };
-    };
-
     // Scene setup.
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
@@ -56,26 +27,94 @@ onMounted(() => {
 
     // Lighting.
     const pointLight = new THREE.PointLight(0xffffff, 1, 20);
-    pointLight.position.set(5, 5, 5);
+    pointLight.position.set(5, 5, 3);
     scene.add(pointLight);
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    // Setup geometry.
-    const texture = new THREE.TextureLoader().load("smiley.png");
-    const geometry = new THREE.SphereGeometry(0.5, 20, 16);
-    geometry.rotateY(-0.5 * pi);
-    const material = new THREE.MeshPhongMaterial({ map: texture });
-    const sphere = new THREE.Mesh(geometry, material);
+    // Setup smiley.
+    const sphereTexture = new THREE.TextureLoader().load("smiley.png");
+    const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 24);
+    sphereGeometry.rotateY(-0.5 * pi);
+    const sphereMaterial = new THREE.MeshPhongMaterial({ map: sphereTexture });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
 
-    const animate = () => {
-      requestAnimationFrame(animate);
-      sphere.rotateY(-0.005 * accDeltaX);
-      sphere.rotateX(-0.005 * accDeltaY);
+    // Setup plane to intersecting ray to rotation smiley.
+    const planeGeometry = new THREE.PlaneGeometry(10, 10);
+    const plane = new THREE.Mesh(planeGeometry);
+    plane.position.z = 1;
+    plane.visible = false;
+    scene.add(plane);
+    const ray = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let pointerActive = false;
 
-      accDeltaX = accDeltaY = 0;
+    const updatePointer = (x: number, y: number) => {
+      pointer.x = THREE.MathUtils.clamp(x / renderer.domElement.clientWidth, 0, 1) * 2 - 1;
+      pointer.y =  - THREE.MathUtils.clamp(y / renderer.domElement.clientHeight, 0, 1) * 2 + 1;
+    };
+
+    // Update mouse on mouse down on canvas.
+    canvas.value.onmousedown = (e: MouseEvent) => {
+      e.preventDefault();
+      updatePointer(e.clientX, e.clientY);
+      pointerActive = true;
+
+      // Allow mouse move on whole document.
+      document.onmousemove = (e: MouseEvent) => {
+        e.preventDefault();
+        updatePointer(e.clientX, e.clientY);
+        pointerActive = true;
+      }
+
+      // Remove callbacks at mouse up.
+      document.onmouseup = () => {
+        document.onmouseup = null;
+        document.onmousemove = null;
+        pointerActive = false;
+      };
+    };
+
+    // Update mouse on touch down on canvas.
+    canvas.value.ontouchstart = (e: TouchEvent) => {
+      e.preventDefault();
+      updatePointer(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+      pointerActive = true;
+
+      // Allow mouse move on whole document.
+      document.ontouchmove = (e: TouchEvent) => {
+        updatePointer(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+        pointerActive = true;
+      }
+
+      // Remove callbacks at mouse up.
+      document.ontouchend = () => {
+        document.ontouchend = null;
+        document.ontouchmove = null;
+        pointerActive = false;
+      };
+    };
+
+    // Rendering loop.
+    const clock = new THREE.Clock();
+    const animate = () => {
+
+      if(pointerActive) {
+        ray.setFromCamera(pointer, camera );
+        const intersects = ray.intersectObjects([plane], false);
+        if(intersects.length > 0) {
+          sphere.lookAt(intersects[0].point);
+        }
+      } else {
+        // TODO: Make rotation speed depending on delta?
+        sphere.rotation.x /= 1.1;
+        sphere.rotation.y /= 1.1;
+        sphere.rotation.z /= 1.1;
+      }
       renderer.render(scene, camera);
+      // const delta = clock.getDelta();
+      requestAnimationFrame(animate);
     }
     animate();
   }
@@ -85,6 +124,7 @@ onMounted(() => {
 
 <template>
   <canvas
+
     ref="canvas"
     :width="CANVAS_WIDTH"
     :height="CANVAS_HEIGHT"
