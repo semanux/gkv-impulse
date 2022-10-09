@@ -19,4 +19,6 @@ const url = computed(() => window.location.href);
 </template>
 
 <style>
+@import "./assets/styles/corporate/style.css";
+
 </style>
