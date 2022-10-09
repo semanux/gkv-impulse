@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import * as THREE from "three";
 import { onMounted, ref } from "vue";
-import { pi } from "mathjs";
+import { pi, sin, cos } from "mathjs";
 
 const CANVAS_WIDTH = 2 * 180;
 const CANVAS_HEIGHT = 2 * 320;
@@ -20,16 +20,17 @@ onMounted(() => {
       0.1,
       1000);
     camera.position.z = 2.5;
-    const renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true, alpha: true });
     renderer.setSize(
       canvas.value.width,
       canvas.value.height);
+    renderer.setClearColor(0x000000, 0);
 
     // Lighting.
-    const pointLight = new THREE.PointLight(0xffffff, 1, 20);
-    pointLight.position.set(5, 5, 3);
+    const pointLight = new THREE.PointLight(0xb51a88, 1, 20);
+    pointLight.position.z = 3;
     scene.add(pointLight);
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
     scene.add(ambientLight);
 
     // Setup smiley.
@@ -52,8 +53,9 @@ onMounted(() => {
     let pointerActive = false;
 
     const updatePointer = (x: number, y: number) => {
-      pointer.x = THREE.MathUtils.clamp(x / renderer.domElement.clientWidth, 0, 1) * 2 - 1;
-      pointer.y =  - THREE.MathUtils.clamp(y / renderer.domElement.clientHeight, 0, 1) * 2 + 1;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = THREE.MathUtils.clamp((x - rect.left) / renderer.domElement.clientWidth, 0, 1) * 2 - 1;
+      pointer.y =  - THREE.MathUtils.clamp((y - rect.top) / renderer.domElement.clientHeight, 0, 1) * 2 + 1;
     };
 
     // Update mouse on mouse down on canvas.
@@ -101,6 +103,7 @@ onMounted(() => {
     const clock = new THREE.Clock();
     const animate = () => {
 
+      // Rotate smiley.
       if(pointerActive) {
         ray.setFromCamera(pointer, camera );
         const intersects = ray.intersectObjects([plane], false);
@@ -113,6 +116,11 @@ onMounted(() => {
         sphere.rotation.y /= 1.1;
         sphere.rotation.z /= 1.1;
       }
+
+      // Update lighting.
+      pointLight.position.x = 5 * sin(clock.getElapsedTime());
+      pointLight.position.y = 9 * cos(clock.getElapsedTime());
+
       renderer.render(scene, camera);
       // const delta = clock.getDelta();
       requestAnimationFrame(animate);
@@ -136,6 +144,10 @@ onMounted(() => {
 
 .face {
   border-radius: var(--high-roundness);
+  background: linear-gradient(#a61f7d, #edd2e5);
+  box-shadow: 0 0 2rem var(--color-transparent-contrast-25);
+  border: 0.125rem solid var(--color-lowest-contrast);
+  box-sizing: border-box;
 }
 
 </style>
