@@ -1,8 +1,10 @@
 <script setup lang="ts">
 
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import Face from "./Face.vue";
 import Foot from "./Foot.vue";
+
+const faceRef = ref<InstanceType<typeof Face>>();
 
 onMounted(() => {
   document.documentElement.setAttribute("data-theme", "dark");
@@ -11,11 +13,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div  :class="$style.app">
-    <div>
+  <div :class="$style.app">
       <h1>Semanux @ GKV im:pulse</h1>
-      <face />
-    </div>
+      <face ref="faceRef"/>
+      <div>
+        <div>
+          Yaw: {{ faceRef?.yaw }}
+        </div>
+        <div>
+          Pitch {{ faceRef?.pitch }}
+        </div>
+      </div>
     <foot/>
   </div>
 </template>

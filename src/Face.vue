@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import * as THREE from "three";
 import { onMounted, ref } from "vue";
-import { pi, sin, cos } from "mathjs";
+import { pi, sin, cos, round } from "mathjs";
 
-const CANVAS_WIDTH = 2 * 180;
-const CANVAS_HEIGHT = 2 * 320;
+const CANVAS_WIDTH = 1.5 * 180;
+const CANVAS_HEIGHT = 1.5 * 320;
 
 const canvas = ref<HTMLCanvasElement>();
+
+// Exposed references.
+const yaw = ref(0);
+const pitch = ref(0);
+defineExpose({ yaw, pitch });
 
 onMounted(() => {
 
@@ -121,8 +126,12 @@ onMounted(() => {
       pointLight.position.x = 5 * sin(clock.getElapsedTime());
       pointLight.position.y = 9 * cos(clock.getElapsedTime());
 
+      // Update exposed variables.
+      pitch.value = round(sphere.rotation.x, 2);
+      yaw.value = round(sphere.rotation.y, 2);
+
+      // Render.
       renderer.render(scene, camera);
-      // const delta = clock.getDelta();
       requestAnimationFrame(animate);
     }
     animate();
@@ -143,6 +152,7 @@ onMounted(() => {
 <style module>
 
 .face {
+  display: block;
   border-radius: var(--high-roundness);
   background: linear-gradient(#a61f7d, #edd2e5);
   box-shadow: 0 0 2rem var(--color-transparent-contrast-25);

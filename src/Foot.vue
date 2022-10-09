@@ -37,7 +37,7 @@ const url = computed(() => window.location.href);
 }
 
 .cell {
-  margin: 1rem;
+  margin: 4rem;
 }
 
 .cell img {
