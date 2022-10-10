@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { onMounted, ref } from "vue";
+import { pi, round } from "mathjs";
 import Face from "./Face.vue";
 import Foot from "./Foot.vue";
 
@@ -21,10 +22,10 @@ onMounted(() => {
           Mouth: {{ faceRef?.mouthOpen ? "Open" : "Closed" }}
         </div>
         <div>
-          Yaw: {{ faceRef?.yaw }}
+          Yaw: {{ faceRef ? round(faceRef.yaw / pi * 180) : 0 }}°
         </div>
         <div>
-          Pitch: {{ faceRef?.pitch }}
+          Pitch: {{ faceRef ?  round(faceRef.pitch / pi * 180) : 0 }}°
         </div>
       </div>
     <foot/>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import * as THREE from "three";
-import { computed, onMounted, ref, watchEffect } from "vue";
-import { pi, sin, cos, round } from "mathjs";
+import { onMounted, ref, watchEffect } from "vue";
+import { pi, sin, cos } from "mathjs";
 
 const CANVAS_WIDTH = 1.5 * 180;
 const CANVAS_HEIGHT = 1.5 * 320;
@@ -179,8 +179,8 @@ onMounted(() => {
       pointLight3.position.y = 6 * cos(clock.getElapsedTime());
 
       // Update exposed variables.
-      pitch.value = round(smiley.rotation.x, 2);
-      yaw.value = round(smiley.rotation.y, 2);
+      pitch.value = smiley.rotation.x;
+      yaw.value = smiley.rotation.y;
 
       // Render.
       renderer.render(scene, camera);
