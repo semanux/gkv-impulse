@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as THREE from "three";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watchEffect } from "vue";
 import { pi, sin, cos, round } from "mathjs";
 
 const CANVAS_WIDTH = 1.5 * 180;
@@ -21,17 +21,17 @@ onMounted(() => {
 
     // Animation variables.
     let blinkTime = BLINK_PAUSE;
-    let blinking = false;
-    let open = false;
+    let blinking = ref(false);
+    let mouthOpen = ref(false);
 
     // Scene setup.
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
-      50,
+      30,
       canvas.value.width / canvas.value.height,
       0.1,
       1000);
-    camera.position.z = 2.5;
+    camera.position.z = 4;
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true, alpha: true });
     renderer.setSize(
       canvas.value.width,
@@ -64,7 +64,14 @@ onMounted(() => {
     // Setup smiley.
     const smileyGeometry = new THREE.SphereGeometry(0.5, 48, 32);
     smileyGeometry.rotateY(-0.5 * pi);
-    const smileyMaterial = new THREE.MeshPhongMaterial({ map: open ? smileyOpenTexture : smileyIdleTexture });
+    const smileyMaterial = new THREE.MeshPhongMaterial();
+    watchEffect(() => {
+      if(blinking.value) {
+        smileyMaterial.map = mouthOpen.value ? smileyOpenBlinkTexture : smileyIdleBlinkTexture;
+      } else {
+        smileyMaterial.map = mouthOpen.value ? smileyOpenTexture : smileyIdleTexture;
+      }
+    });
     const smiley = new THREE.Mesh(smileyGeometry, smileyMaterial);
     scene.add(smiley);
 
@@ -90,11 +97,15 @@ onMounted(() => {
       pointer.y =  - THREE.MathUtils.clamp((y - rect.top) / renderer.domElement.clientHeight, 0, 1) * 2 + 1;
     };
 
+    // Disable context menu on right click.
+    document.oncontextmenu = () => { return false; };
+
     // Update mouse on mouse down on canvas.
     canvas.value.onmousedown = (e: MouseEvent) => {
       e.preventDefault();
       updatePointer(e.clientX, e.clientY);
       pointerActive = true;
+      mouthOpen.value = e.button !== 0;
 
       // Allow mouse move on whole document.
       document.onmousemove = (e: MouseEvent) => {
@@ -108,6 +119,7 @@ onMounted(() => {
         document.onmouseup = null;
         document.onmousemove = null;
         pointerActive = false;
+        mouthOpen.value = false;
       };
     };
 
@@ -116,6 +128,7 @@ onMounted(() => {
       e.preventDefault();
       updatePointer(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
       pointerActive = true;
+      mouthOpen.value = e.touches.length > 1;
 
       // Allow mouse move on whole document.
       document.ontouchmove = (e: TouchEvent) => {
@@ -128,6 +141,7 @@ onMounted(() => {
         document.ontouchend = null;
         document.ontouchmove = null;
         pointerActive = false;
+        mouthOpen.value = false;
       };
     };
 
@@ -152,13 +166,8 @@ onMounted(() => {
       // Update blinking.
       blinkTime -= clock.getDelta();
       if(blinkTime <= 0) {
-        blinking = !blinking;
-        blinkTime = blinking ? BLINK_DURATION : BLINK_PAUSE;
-        if(blinking) {
-          smileyMaterial.map = open ? smileyOpenBlinkTexture : smileyIdleBlinkTexture;
-        } else {
-          smileyMaterial.map = open ? smileyOpenTexture : smileyIdleTexture;
-        }
+        blinking.value = !blinking.value;
+        blinkTime = blinking.value ? BLINK_DURATION : BLINK_PAUSE;
       }
 
       // Update lighting.
