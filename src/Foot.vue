@@ -10,18 +10,25 @@ const url = computed(() => window.location.href);
 <template>
   <div :class="$style.foot">
     <div :class="$style.cell">
-      <img src="/semanux.png" />
+      <a href="https://semanux.com">
+        <img src="/semanux.png" />
+      </a>
     </div>
     <div :class="$style.cell">
-      <img src="/gkv-impulse.svg" />
+      <a href="https://www.gkv-impulse.de">
+        <img src="/gkv-impulse.svg" />
+      </a>
     </div>
     <div :class="$style.cell">
       <qrcode-vue
         :value="url"
         :render-as="'svg'"
         :level="'L'"
-        :class="[$style.cell, $style.qrcode]"
+        :class="[$style.qrcode]"
       />
+      <div :class="$style.qrcodeMessage">
+        Scan to try!
+      </div>
     </div>
   </div>
 </template>
@@ -31,13 +38,16 @@ const url = computed(() => window.location.href);
 .foot {
   display: grid;
   width: 100%;
+  max-width: 768px;
   grid-template-columns: repeat(3, 1fr);
-  align-items: center;
+  align-items: end;
   justify-items: center;
+  margin-top: 1rem;
 }
 
 .cell {
-  margin: 10rem;
+  box-sizing: border-box;
+  max-width: 80%;
 }
 
 .cell img {
@@ -46,9 +56,18 @@ const url = computed(() => window.location.href);
 }
 
 .qrcode {
+  box-sizing: border-box;
   padding: 0.5rem;
   border-radius: 0.5rem;
   background: var(--color-white);
+}
+
+.qrcodeMessage {
+  font-family: "Barlow", sans-serif;
+  color: var(--color-highest-contrast);
+  font-size: 75%;
+  text-align: center;
+  margin-top: -0.25rem;
 }
 
 </style>
