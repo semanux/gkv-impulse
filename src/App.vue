@@ -18,10 +18,13 @@ onMounted(() => {
       <face ref="faceRef"/>
       <div>
         <div>
+          Mouth: {{ faceRef?.mouthOpen ? "Open" : "Closed" }}
+        </div>
+        <div>
           Yaw: {{ faceRef?.yaw }}
         </div>
         <div>
-          Pitch {{ faceRef?.pitch }}
+          Pitch: {{ faceRef?.pitch }}
         </div>
       </div>
     <foot/>

@@ -13,7 +13,8 @@ const canvas = ref<HTMLCanvasElement>();
 // Exposed references.
 const yaw = ref(0);
 const pitch = ref(0);
-defineExpose({ yaw, pitch });
+const mouthOpen = ref(false);
+defineExpose({ yaw, pitch, mouthOpen });
 
 onMounted(() => {
 
@@ -21,8 +22,7 @@ onMounted(() => {
 
     // Animation variables.
     let blinkTime = BLINK_PAUSE;
-    let blinking = ref(false);
-    let mouthOpen = ref(false);
+    const blinking = ref(false);
 
     // Scene setup.
     const scene = new THREE.Scene();
@@ -105,7 +105,7 @@ onMounted(() => {
       e.preventDefault();
       updatePointer(e.clientX, e.clientY);
       pointerActive = true;
-      mouthOpen.value = e.button !== 0;
+      mouthOpen.value = e.button !== 0; // Open mouth when right mouse button is clicked.
 
       // Allow mouse move on whole document.
       document.onmousemove = (e: MouseEvent) => {
@@ -128,7 +128,7 @@ onMounted(() => {
       e.preventDefault();
       updatePointer(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
       pointerActive = true;
-      mouthOpen.value = e.touches.length > 1;
+      mouthOpen.value = e.touches.length > 1; // Open mouth when more than one finger touches.
 
       // Allow mouse move on whole document.
       document.ontouchmove = (e: TouchEvent) => {
