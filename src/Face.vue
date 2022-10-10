@@ -64,7 +64,7 @@ onMounted(() => {
     // Setup smiley.
     const smileyGeometry = new THREE.SphereGeometry(0.5, 48, 32);
     smileyGeometry.rotateY(-0.5 * pi);
-    const smileyMaterial = new THREE.MeshPhongMaterial();
+    const smileyMaterial = new THREE.MeshPhongMaterial({ map: smileyIdleTexture });
     watchEffect(() => {
       if(blinking.value) {
         smileyMaterial.map = mouthOpen.value ? smileyOpenBlinkTexture : smileyIdleBlinkTexture;
