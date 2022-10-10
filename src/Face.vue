@@ -5,6 +5,8 @@ import { pi, sin, cos, round } from "mathjs";
 
 const CANVAS_WIDTH = 1.5 * 180;
 const CANVAS_HEIGHT = 1.5 * 320;
+const BLINK_DURATION = 0.25; // In seconds.
+const BLINK_PAUSE = 5; // In seconds.
 
 const canvas = ref<HTMLCanvasElement>();
 
@@ -16,6 +18,11 @@ defineExpose({ yaw, pitch });
 onMounted(() => {
 
   if(canvas.value) {
+
+    // Animation variables.
+    let blinkTime = BLINK_PAUSE;
+    let blinking = false;
+    let open = false;
 
     // Scene setup.
     const scene = new THREE.Scene();
@@ -32,20 +39,40 @@ onMounted(() => {
     renderer.setClearColor(0x000000, 0);
 
     // Lighting.
-    const pointLight = new THREE.PointLight(0xb51a88, 1, 20);
-    pointLight.position.z = 3;
-    scene.add(pointLight);
+    const pointLight1 = new THREE.PointLight(0xa53a98, 0.5, 15);
+    pointLight1.position.z = 3;
+    const pointLight2 = new THREE.PointLight(0xb51aa8, 0.5, 15);
+    pointLight2.position.z = 2;
+    const pointLight3 = new THREE.PointLight(0xc52a88, 0.5, 15);
+    pointLight3.position.z = 3.5;
+    scene.add(pointLight1);
+    scene.add(pointLight2);
+    scene.add(pointLight3);
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
     scene.add(ambientLight);
 
+    // Load smiley textures.
+    const smileyIdleTexture = new THREE.TextureLoader().load("smiley-idle.png");
+    const smileyIdleBlinkTexture = new THREE.TextureLoader().load("smiley-idle-blink.png");
+    const smileyOpenTexture = new THREE.TextureLoader().load("smiley-open.png");
+    const smileyOpenBlinkTexture = new THREE.TextureLoader().load("smiley-open-blink.png");
+    smileyIdleTexture.anisotropy = 2;
+    smileyIdleBlinkTexture.anisotropy = 2;
+    smileyOpenTexture.anisotropy = 2;
+    smileyOpenBlinkTexture.anisotropy = 2;
+
     // Setup smiley.
-    const sphereTexture = new THREE.TextureLoader().load("smiley.png");
-    sphereTexture.anisotropy = 2;
-    const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 24);
-    sphereGeometry.rotateY(-0.5 * pi);
-    const sphereMaterial = new THREE.MeshPhongMaterial({ map: sphereTexture });
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    scene.add(sphere);
+    const smileyGeometry = new THREE.SphereGeometry(0.5, 48, 32);
+    smileyGeometry.rotateY(-0.5 * pi);
+    const smileyMaterial = new THREE.MeshPhongMaterial({ map: open ? smileyOpenTexture : smileyIdleTexture });
+    const smiley = new THREE.Mesh(smileyGeometry, smileyMaterial);
+    scene.add(smiley);
+
+    // Setup outline.
+    const outlineGeometry = new THREE.SphereGeometry(0.5125, 48, 32);
+    const outlineMaterial = new THREE.MeshStandardMaterial({color: 0x000000, side: THREE.BackSide})
+    const outline = new THREE.Mesh(outlineGeometry, outlineMaterial);
+    scene.add(outline);
 
     // Setup plane to intersecting ray to rotation smiley.
     const planeGeometry = new THREE.PlaneGeometry(10, 10);
@@ -113,22 +140,38 @@ onMounted(() => {
         ray.setFromCamera(pointer, camera );
         const intersects = ray.intersectObjects([plane], false);
         if(intersects.length > 0) {
-          sphere.lookAt(intersects[0].point);
+          smiley.lookAt(intersects[0].point);
         }
       } else {
         // TODO: Make rotation speed depending on delta?
-        sphere.rotation.x /= 1.1;
-        sphere.rotation.y /= 1.1;
-        sphere.rotation.z /= 1.1;
+        smiley.rotation.x /= 1.1;
+        smiley.rotation.y /= 1.1;
+        smiley.rotation.z /= 1.1;
+      }
+
+      // Update blinking.
+      blinkTime -= clock.getDelta();
+      if(blinkTime <= 0) {
+        blinking = !blinking;
+        blinkTime = blinking ? BLINK_DURATION : BLINK_PAUSE;
+        if(blinking) {
+          smileyMaterial.map = open ? smileyOpenBlinkTexture : smileyIdleBlinkTexture;
+        } else {
+          smileyMaterial.map = open ? smileyOpenTexture : smileyIdleTexture;
+        }
       }
 
       // Update lighting.
-      pointLight.position.x = 5 * sin(clock.getElapsedTime());
-      pointLight.position.y = 9 * cos(clock.getElapsedTime());
+      pointLight1.position.x = 5 * sin(clock.getElapsedTime());
+      pointLight1.position.y = 9 * cos(clock.getElapsedTime());
+      pointLight2.position.x = 3 * sin(clock.getElapsedTime());
+      pointLight2.position.y = -6 * cos(clock.getElapsedTime());
+      pointLight3.position.x = -3 * sin(clock.getElapsedTime());
+      pointLight3.position.y = 6 * cos(clock.getElapsedTime());
 
       // Update exposed variables.
-      pitch.value = round(sphere.rotation.x, 2);
-      yaw.value = round(sphere.rotation.y, 2);
+      pitch.value = round(smiley.rotation.x, 2);
+      yaw.value = round(smiley.rotation.y, 2);
 
       // Render.
       renderer.render(scene, camera);
