@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { min, max } from "mathjs";
 
 // Properties.
@@ -16,7 +16,7 @@ let interval = 0;
 onMounted(() => {
   interval = setInterval(() => {
     aggScroll.value += props.scrollDelta;
-    aggScroll.value = min(max(aggScroll.value, 0), 2065); // TODO: How to compute the max scroll value? Depends on the device size!
+    aggScroll.value = min(max(aggScroll.value, 0), 2000); // TODO: How to compute the max scroll value? Depends on the device size!
   }, 1000/60);
 })
 onUnmounted(() => {
@@ -57,7 +57,7 @@ const scroll = computed(() => {
   border-radius: calc(0.25 * var(--high-roundness));
   box-shadow: 0 0 2rem var(--color-transparent-contrast-25);
   background-repeat: no-repeat;
-  background-image: url("/app-home.jpg");
+  background-image: url("/app-home-no-search.jpg");
   background-size: 100% auto;
   background-position: 0px v-bind(scroll);
 

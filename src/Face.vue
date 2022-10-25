@@ -163,6 +163,15 @@ onMounted(() => {
         smiley.rotation.z /= 1.1;
       }
 
+      // Scale smiley.
+      /*
+      if(!pointerActive) {
+        const scale = 1 + (0.025 * sin(5 * clock.getElapsedTime()));
+        smiley.scale.set(scale, scale, scale);
+        outline.scale.set(scale, scale, scale);
+      }
+      */
+
       // Update blinking.
       blinkTime -= clock.getDelta();
       if(blinkTime <= 0) {

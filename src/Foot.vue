@@ -38,10 +38,12 @@ const url = computed(() => window.location.href);
 .foot {
   display: grid;
   width: 100%;
-  max-width: 768px;
+  max-width: 850px;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
   align-items: end;
   justify-items: center;
+  row-gap: 2rem;
 }
 
 .cell {
@@ -59,8 +61,6 @@ const url = computed(() => window.location.href);
   padding: 0.5rem;
   border-radius: 0.5rem;
   background: var(--color-white);
-  width: 96px;
-  height: 96px;
 }
 
 .qrcodeMessage {
@@ -69,6 +69,13 @@ const url = computed(() => window.location.href);
   font-size: 75%;
   text-align: center;
   margin-top: -0.25rem;
+}
+
+@media (max-width: 500px) {
+  .foot {
+    grid-template-columns: auto;
+    grid-template-rows: repeat(3, 1fr);
+  }
 }
 
 </style>
