@@ -3,8 +3,8 @@ import * as THREE from "three";
 import { onMounted, ref, watchEffect } from "vue";
 import { pi, sin, cos } from "mathjs";
 
-const CANVAS_WIDTH = 1.5 * 180;
-const CANVAS_HEIGHT = 1.5 * 320;
+const CANVAS_WIDTH = 125;
+const CANVAS_HEIGHT = 125;
 const BLINK_DURATION = 0.25; // In seconds.
 const BLINK_PAUSE = 5; // In seconds.
 
@@ -27,7 +27,7 @@ onMounted(() => {
     // Scene setup.
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
-      30,
+      20,
       canvas.value.width / canvas.value.height,
       0.1,
       1000);
@@ -193,23 +193,24 @@ onMounted(() => {
 </script>
 
 <template>
-  <canvas
-    :class="$style.face"
-    ref="canvas"
-    :width="CANVAS_WIDTH"
-    :height="CANVAS_HEIGHT"
-  />
+  <div :class="$style.face">
+    <canvas
+      ref="canvas"
+      :width="CANVAS_WIDTH"
+      :height="CANVAS_HEIGHT"
+    />
+  </div>
+ 
 </template>
 
 <style module>
 
 .face {
-  display: block;
   border-radius: var(--high-roundness);
   background: linear-gradient(#a61f7d, #edd2e5);
   box-shadow: 0 0 2rem var(--color-transparent-contrast-25);
   border: 0.125rem solid var(--color-lowest-contrast);
-  box-sizing: border-box;
+  box-sizing: padding-box;
 }
 
 </style>

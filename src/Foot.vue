@@ -10,6 +10,17 @@ const url = computed(() => window.location.href);
 <template>
   <div :class="$style.foot">
     <div :class="$style.cell">
+      <qrcode-vue
+        :value="url"
+        :render-as="'svg'"
+        :level="'L'"
+        :class="[$style.qrcode]"
+      />
+      <div :class="$style.qrcodeMessage">
+        Scan to try.
+      </div>
+    </div>
+    <div :class="$style.cell">
       <a href="https://semanux.com">
         <img src="/semanux.png" />
       </a>
@@ -18,17 +29,6 @@ const url = computed(() => window.location.href);
       <a href="https://www.gkv-impulse.de">
         <img src="/gkv-impulse.svg" />
       </a>
-    </div>
-    <div :class="$style.cell">
-      <qrcode-vue
-        :value="url"
-        :render-as="'svg'"
-        :level="'L'"
-        :class="[$style.qrcode]"
-      />
-      <div :class="$style.qrcodeMessage">
-        Scan to try!
-      </div>
     </div>
   </div>
 </template>
@@ -42,7 +42,6 @@ const url = computed(() => window.location.href);
   grid-template-columns: repeat(3, 1fr);
   align-items: end;
   justify-items: center;
-  margin-top: 1rem;
 }
 
 .cell {
@@ -60,6 +59,8 @@ const url = computed(() => window.location.href);
   padding: 0.5rem;
   border-radius: 0.5rem;
   background: var(--color-white);
+  width: 96px;
+  height: 96px;
 }
 
 .qrcodeMessage {
