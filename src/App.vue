@@ -14,33 +14,31 @@ onMounted(() => {
   document.documentElement.setAttribute("data-theme", "dark");
 });
 
-// Mouth: {{ faceRef?.mouthOpen ? "Open" : "Closed" }}
-// Yaw: {{ faceRef ? round(faceRef.yaw / pi * 180) : 0 }}°
-// Pitch: {{ faceRef ?  round(faceRef.pitch / pi * 180) : 0 }}°
-
 </script>
 
 <template>
   <div :class="$style.app">
     <h1 style="grid-area: head">Semanux @ GKV im:pulse</h1>
-    <span :class="$style.subhead">Controlling your health insurance's app with you head alone? 🙃</span>
+    <span :class="$style.subhead">Controlling your health insurance's app with you head alone? 🤔</span>
     <div :class="$style.notes">
-      <p>This demo is <b>Semanux' contribution</b> to the <b>GKV im:pulse accelerator 2022!</b> 🚀 We are proud to present you our vision 🔮 how we will enable you to take control over your health insurance app using your head alone - ✋ <i>touchless</i>, 😶 <i>speechless</i>, 🐥 <i>effortless</i>.</p>
-      <span>A solution for following situations and more:</span>
+      <p>This demo is <b>Semanux' contribution</b> to the <b>GKV im:pulse accelerator 2022!</b> 🚀 We are proud to present you our vision 🔮 of how we will enable you to take control over your health insurance app using your head alone - ✋ <i>touchless</i>, 😶 <i>speechless</i>, 🐥 <i>effortless</i>.</p>
+      <span>Allow you to use the app even in situations like:</span>
       <ul>
         <li>Broke your hand? ✊</li>
         <li>Busy hands while cooking? 👩‍🍳</li>
         <li>Dirty surface like an ATM? 💳</li>
         <li>Clean environment like surgery? 👨‍⚕️</li>
-        <li>Motor impairment in the upper limps? 🦾</li>
+        <li>Motor impairment in your upper limbs? 🦾</li>
       </ul>
-      <p>We are still working to bring our technology into any app. Thus, here you can experience our vision <b>by dragging or touching the smiley face</b> next to this description! </p>
+      <p>We are still working to bring our technology into any app. Thus, here you can experience our vision <b>by dragging or touching the smiley face</b> next to this description!</p>
       <p>Drag it with the left mouse button or touch it with one finger to rotate it for scrolling. 🙃 Drag it with the right mouse button or touch it with two fingers to let it open its mouth for a selection. 😮</p>
     </div>
     <div :class="$style.contents">
       <device
         :class="$style.device"
-        :scroll-delta="(faceRef && !faceRef?.mouthOpen) ? round(faceRef.pitch / pi * 180) : 0"
+        :x-delta="faceRef !== undefined ? round(faceRef.yaw / pi * 180) : 0"
+        :y-delta="faceRef !== undefined ? round(faceRef.pitch / pi * 180) : 0"
+        :selecting="faceRef?.mouthOpen"
       />
       <div :class="$style.face">
         <face ref="faceRef"/>
@@ -73,6 +71,15 @@ body {
 
 <style module>
 
+h1 {
+  font-size: 250%;
+  color: white;
+}
+
+b {
+  color: white;
+}
+
 .app {
   padding: 1rem;
   display: grid;
@@ -84,10 +91,6 @@ body {
     "subhead subhead"
     "notes contents"
     "foot foot";
-}
-
-h1 {
-  font-size: 250%;
 }
 
 .subhead {
