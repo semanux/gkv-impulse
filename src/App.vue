@@ -31,7 +31,7 @@ onMounted(() => {
         <li>Motor impairment in your upper limbs? 🦾</li>
       </ul>
       <p>We are still working to bring our technology into any app. Thus, here you can experience our vision <b>by dragging or touching the smiley face</b> next to this description!</p>
-      <p>Drag it with the left mouse button or touch it with one finger to rotate it for scrolling. 🙃 Drag it with the right mouse button or touch it with two fingers to let it open its mouth for a selection. 😮</p>
+      <p>Drag it with the left mouse button or touch it with one finger to rotate it for scrolling. <span :class="$style.spinner">🙃</span> Drag it with the right mouse button or touch it with two fingers to let it open its mouth for a selection. 😮</p>
     </div>
     <div :class="$style.contents">
       <device
@@ -165,6 +165,15 @@ b {
   .contents {
     margin-bottom: 60px;
   }
+}
+
+@keyframes spin {
+  100% { transform:rotate(360deg); }
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin 4s linear infinite;
 }
 
 </style>

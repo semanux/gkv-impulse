@@ -20,7 +20,7 @@ const url = computed(() => window.location.href);
         Scan to try.
       </div>
     </div>
-    <div :class="$style.cell">
+    <div :class="[$style.cell, $style.semanux]">
       <a href="https://semanux.com">
         <img src="/semanux.png" />
       </a>
@@ -71,8 +71,20 @@ const url = computed(() => window.location.href);
   margin-top: -0.25rem;
 }
 
+.gkvImpulse, .semanux {
+  transition: transform 1s ease;
+}
+
 .gkvImpulse {
   transform: translate(0, 2rem);
+}
+
+.gkvImpulse:hover {
+  transform: translate(0, 2rem) scale(1.1);
+}
+
+.semanux:hover {
+  transform:  scale(1.1);
 }
 
 @media (max-width: 500px) {
