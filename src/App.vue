@@ -43,7 +43,7 @@ onMounted(() => {
       <div :class="$style.face">
         <face ref="faceRef"/>
         <div :class="$style.faceMessage">
-          <span :class="$style.pointyFinger">☝️</span> Touch me!
+          <span :class="$style.pointyFinger">☝️</span>Touch&nbsp;me!
         </div>
       </div>
     </div>
@@ -78,6 +78,10 @@ h1 {
 
 b {
   color: white;
+}
+
+a {
+  color: var(--color-font-primary);
 }
 
 .app {
