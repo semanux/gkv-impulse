@@ -25,7 +25,7 @@ const url = computed(() => window.location.href);
         <img src="/semanux.png" />
       </a>
     </div>
-    <div :class="$style.cell">
+    <div :class="[$style.cell, $style.gkvImpulse]">
       <a href="https://www.gkv-impulse.de">
         <img src="/gkv-impulse.svg" />
       </a>
@@ -39,7 +39,7 @@ const url = computed(() => window.location.href);
   display: grid;
   width: 100%;
   max-width: 850px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr 1.25fr;
   grid-template-rows: auto;
   align-items: end;
   justify-items: center;
@@ -69,6 +69,10 @@ const url = computed(() => window.location.href);
   font-size: 75%;
   text-align: center;
   margin-top: -0.25rem;
+}
+
+.gkvImpulse {
+  transform: translate(0, 2rem);
 }
 
 @media (max-width: 500px) {
