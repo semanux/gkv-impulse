@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, onBeforeUnmount, ref, watch } from "vue";
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  onBeforeUnmount,
+  ref,
+  watch
+} from "vue";
 import { abs, min, max } from "mathjs";
 import screens from "./screen";
 
@@ -21,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 // Set active screen.
-const screen = ref(screens["home-no-search"]);
+const screen = ref(screens["home-no-search-inbox"]);
 const displayStyle = computed(() => {
   return {
     backgroundImage: `url(${screen.value.src})`,
@@ -126,6 +133,7 @@ watch(() => props.selecting, to => {
   } else { // Try to select.
     const intersectLink = doIntersect(aggX.value, aggY.value);
     if(intersectLink !== "") {
+      console.log(intersectLink);
       aggScroll.value = 0;
       screen.value = screens[intersectLink];
       scale.value = 0.5;

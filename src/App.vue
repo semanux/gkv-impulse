@@ -65,6 +65,7 @@ body {
     #3e0e30,
     #11352c);
   background-attachment: fixed;
+  overflow-x: hidden;
 }
 
 </style>
