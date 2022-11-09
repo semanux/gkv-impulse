@@ -5,6 +5,8 @@ Experience the vision 🔮 by Semanux in a [_live demo_](https://gkv-impulse.sem
 
 This demo is a contribution of the Semanux team to the [GKV im:pulse accelerator](https://www.gkv-impulse.de).
 
+![alt text](demo.gif)
+
 ### How to run locally
 
 1. Install a recent [Node.js environment](https://nodejs.org).
