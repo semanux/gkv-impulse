@@ -18,7 +18,7 @@ onMounted(() => {
 
 <template>
   <div :class="$style.app">
-    <div :class="$style.award">🎉 <a href="https://semanux.com/blog/first-place-gkv-impulse-challenge">First place</a> in the communication challenge of the GKV im:pulse Accelerator! 🥇</div>
+    <div :class="$style.award">🎉 <a href="https://semanux.com/blog/first-place-gkv-impulse-challenge">We won the first place</a> in the communication challenge of the GKV im:pulse Accelerator! 🥇</div>
     <h1 style="grid-area: head">Semanux @ GKV im:pulse</h1>
     <div :class="$style.subhead">Controlling your health insurance's app with you head alone? 🤔</div>
     <div :class="$style.notes">
