@@ -18,8 +18,9 @@ onMounted(() => {
 
 <template>
   <div :class="$style.app">
+    <div :class="$style.award">🎉 <a href="https://semanux.com/blog/first-place-gkv-impulse-challenge">First place</a> in the communication challenge of the GKV im:pulse Accelerator! 🥇</div>
     <h1 style="grid-area: head">Semanux @ GKV im:pulse</h1>
-    <span :class="$style.subhead">Controlling your health insurance's app with you head alone? 🤔</span>
+    <div :class="$style.subhead">Controlling your health insurance's app with you head alone? 🤔</div>
     <div :class="$style.notes">
       <p>This demo is <b>Semanux' contribution</b> to the <b>GKV im:pulse accelerator 2022!</b> 🚀 We are proud to present you our vision 🔮 of how we will enable you to take control over your health insurance app using your head alone - ✋ <i>touchless</i>, 😶 <i>speechless</i>, 🐥 <i>effortless</i>.</p>
       <span>Allow you to use the app even in situations like:</span>
@@ -75,6 +76,7 @@ body {
 h1 {
   font-size: 250%;
   color: white;
+  margin-top: 0.5rem;
 }
 
 b {
@@ -92,6 +94,7 @@ a {
   justify-items: center;
   column-gap: 1rem;
   grid-template-areas:
+    "award award"
     "head head"
     "subhead subhead"
     "notes contents"
@@ -102,8 +105,27 @@ a {
   grid-area: subhead;
   font-size: 125%;
   margin-top: -1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   color: var(--color-font-secondary);
+}
+
+.award {
+  grid-area: award;
+  display: block;
+  text-align: center;
+  color: white;
+  background: linear-gradient(to right, #EA2DCB, 25%, #F47495);
+  padding: 0.25rem 0 0.25rem 0;
+  text-shadow: 0 0 1rem rgba(0,0,0,0.5);
+  overflow: hidden;
+  margin: 0.5rem;
+  max-width: 500px;
+  padding: 1rem;
+  border-radius: 2rem;
+}
+
+.award a {
+  color: white;
 }
 
 .notes {
@@ -156,6 +178,7 @@ a {
   .app {
     grid-template-columns: 1fr;
     grid-template-areas:
+    "award"
     "head"
     "subhead"
     "contents"
